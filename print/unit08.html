@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>08. ㅁ ㅂ</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<style>
+:root{
+  --ink:#3B2B40;      /* 글자·테두리 — 진한 보라회색 */
+  --rose:#E0508A;     /* 강조·머리말 탭 */
+  --gold:#E8A33D;     /* 굵은 밑줄 */
+  --lilac:#A98BD0;    /* 보조 */
+  --line:#CFC2D8;     /* 연한 선 */
+  --trace:#D6D2DA;    /* 따라쓰기 회색 글자 */
+  --guide:#E6E0EC;    /* 칸 안 십자 보조선 */
+  --serif:'Noto Sans KR',system-ui,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;
+  --round:'Jua','Noto Sans KR',system-ui,sans-serif;
+  --hand:'Gaegu','Noto Sans KR',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff}
+body{font-family:var(--serif);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+@page{size:A4;margin:0}
+.page{
+  width:210mm;height:297mm;padding:11mm 13mm 8mm;
+  display:flex;flex-direction:column;background:#fff;position:relative;
+}
+
+/* ── 머리말 ─────────────────────────────────────── */
+.head{display:flex;align-items:flex-end;gap:7mm;flex:none}
+.tab{
+  font-family:var(--round);font-size:9.2mm;line-height:1;color:#fff;
+  background:var(--rose);padding:3.4mm 6mm 4.2mm;
+  border-radius:0 0 9mm 9mm;margin-top:-11mm;letter-spacing:-.3mm;
+}
+.head .say{font-family:var(--round);font-size:6.4mm;padding-bottom:1.4mm;letter-spacing:-.2mm}
+.newpill{
+  margin-left:auto;font-family:var(--round);font-size:4mm;color:#fff;
+  background:var(--lilac);border-radius:999px;padding:1.6mm 4mm;margin-bottom:1.6mm;
+}
+.newpill + .no{margin-left:3mm}
+.head .no{margin-left:auto;font-family:var(--round);font-size:4.6mm;color:var(--lilac);padding-bottom:2mm}
+.rule{height:2.6mm;background:var(--gold);border-radius:1.3mm;margin:2.5mm 0 0;flex:none}
+.rule.thin{height:1.2mm;background:var(--line)}
+
+/* ── 본문 틀 ─────────────────────────────────────── */
+main{flex:1 1 auto;display:flex;flex-direction:column;gap:4mm;padding-top:4mm;min-height:0}
+.band{display:flex;align-items:center;gap:4mm;flex:none}
+.band h2{
+  font-family:var(--round);font-size:4.8mm;margin:0;color:var(--rose);
+  background:#FCEFF5;border-radius:3mm;padding:1.4mm 3.4mm;white-space:nowrap;
+}
+.band .hint{font-family:var(--hand);font-size:4.6mm;color:var(--lilac)}
+
+/* ── 쓰는 칸 ─────────────────────────────────────── */
+.boxes{display:flex;gap:2.6mm;flex:none}
+.box{
+  border:0.9mm solid var(--ink);border-radius:2.4mm;background:#fff;
+  display:grid;place-items:center;position:relative;overflow:hidden;flex:none;
+}
+/* 십자 보조선 — 글자를 칸 가운데에 앉히는 기준이다 */
+.box::before,.box::after{
+  content:"";position:absolute;background:var(--guide);
+}
+.box::before{left:8%;right:8%;height:0.4mm;top:50%}
+.box::after{top:8%;bottom:8%;width:0.4mm;left:50%}
+.box>span{position:relative;font-weight:500;line-height:1;z-index:1}
+.box.gray>span{color:var(--trace)}
+.box.blank>span{visibility:hidden}
+.box.space::before,.box.space::after{display:none}
+.box.space{border-style:dashed;border-color:var(--line)}
+
+/* ── 색칠 도안 ───────────────────────────────────── */
+.art{display:block;width:100%;height:100%}
+.artbox{flex:1 1 auto;display:grid;place-items:center;min-height:0}
+.artbox svg{max-height:100%;width:auto;max-width:100%}
+
+/* ── 획순 ────────────────────────────────────────── */
+.jamo-row{display:flex;gap:5mm;align-items:center;flex:none}
+.stroke-order{flex:none}
+.stroke-order .guide path{stroke:var(--guide);stroke-width:1.1;stroke-dasharray:3 3;fill:none}
+.stroke-order .st{stroke:var(--ink);stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.stroke-order .num-bg{fill:var(--rose)}
+.stroke-order .num{fill:#fff;font-family:var(--round);font-size:11px;text-anchor:middle;dominant-baseline:central}
+.jamo-meta{font-family:var(--round);font-size:4.4mm;color:var(--lilac);text-align:center;margin-top:1mm}
+
+/* ── 예시 낱말 ───────────────────────────────────── */
+/* 카드에 너비를 못 박아 둔다. height:100% 로 두면 부모 높이가 auto 라
+   그림이 0 으로 찌그러진다 — 실제로 그렇게 인쇄될 뻔했다. */
+.words{display:flex;gap:6mm;justify-content:center;align-items:center;
+       flex:1 1 auto;min-height:0;flex-wrap:wrap}
+.word-card{display:flex;flex-direction:column;align-items:center;gap:1mm;width:40mm;flex:none}
+.word-card svg{width:100%;height:auto}
+.word-card b{font-family:var(--round);font-weight:400;font-size:7mm}
+
+/* ── 조합표 ──────────────────────────────────────── */
+.grid10{display:grid;grid-template-columns:repeat(10,1fr);gap:1.6mm;flex:none}
+.grid10 .box{width:auto;aspect-ratio:1/1;border-width:0.7mm;border-radius:1.8mm}
+.grid10 .box>span{font-size:8.4mm}
+.lead{font-family:var(--round);font-size:5.6mm;color:var(--rose);width:9mm;flex:none;align-self:center}
+.tablerow{display:flex;gap:2.5mm;align-items:center;flex:none}
+.tablerow .grid10{flex:1 1 auto}
+
+/* ── 부모용 ──────────────────────────────────────── */
+.parent{
+  flex:none;margin-top:auto;border:0.7mm dashed var(--lilac);border-radius:3mm;
+  padding:2.6mm 4mm;font-size:3.5mm;line-height:1.5;color:#5C4A63;background:#FBF8FD;
+}
+.parent b{color:var(--rose);font-family:var(--round);font-weight:400;margin-right:2mm}
+.foot{flex:none;display:flex;justify-content:space-between;align-items:center;
+      margin-top:2mm;font-size:3.1mm;color:var(--lilac)}
+.stars{letter-spacing:1mm;font-size:4.6mm;color:var(--gold)}
+</style>
+</head><body>
+<div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">쓰는 순서대로 따라 써요.</div>
+    
+    <div class="no">자음 성 · 8/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+        <div class="jamo-row">
+          <div style="flex:none">
+            <svg class="stroke-order" viewBox="-16 -16 132 132" width="132" height="132" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ㅁ 쓰는 순서"><g class="guide"><path d="M50 0 V100 M0 50 H100"/></g><path class="st" d="M24 20 V80"/><circle class="num-bg" cx="24.0" cy="7.0" r="8"/><text class="num" x="24.0" y="7.0">1</text><path class="st" d="M24 20 H78 V80"/><circle class="num-bg" cx="11.0" cy="20.0" r="8"/><text class="num" x="11.0" y="20.0">2</text><path class="st" d="M24 80 H78"/><circle class="num-bg" cx="11.0" cy="80.0" r="8"/><text class="num" x="11.0" y="80.0">3</text></svg>
+            <div class="jamo-meta">이름 「미음」 · 3획</div>
+          </div>
+          <div class="boxes"><div class="box gray" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅁ</span></div><div class="box gray" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅁ</span></div><div class="box gray" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅁ</span></div><div class="box blank" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅁ</span></div><div class="box blank" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅁ</span></div><div class="box blank" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅁ</span></div></div>
+        </div>
+        <div class="jamo-row">
+          <div style="flex:none">
+            <svg class="stroke-order" viewBox="-16 -16 132 132" width="132" height="132" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ㅂ 쓰는 순서"><g class="guide"><path d="M50 0 V100 M0 50 H100"/></g><path class="st" d="M24 16 V82"/><circle class="num-bg" cx="24.0" cy="3.0" r="8"/><text class="num" x="24.0" y="3.0">1</text><path class="st" d="M78 16 V82"/><circle class="num-bg" cx="78.0" cy="3.0" r="8"/><text class="num" x="78.0" y="3.0">2</text><path class="st" d="M24 52 H78"/><circle class="num-bg" cx="11.0" cy="52.0" r="8"/><text class="num" x="11.0" y="52.0">3</text><path class="st" d="M24 82 H78"/><circle class="num-bg" cx="11.0" cy="82.0" r="8"/><text class="num" x="11.0" y="82.0">4</text></svg>
+            <div class="jamo-meta">이름 「비읍」 · 4획</div>
+          </div>
+          <div class="boxes"><div class="box gray" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅂ</span></div><div class="box gray" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅂ</span></div><div class="box gray" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅂ</span></div><div class="box blank" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅂ</span></div><div class="box blank" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅂ</span></div><div class="box blank" style="width:20mm;height:20mm"><span style="font-size:13.6mm">ㅂ</span></div></div>
+        </div>
+        <div class="band"><h2>이 소리로 시작해요</h2>
+          <span class="hint">낱말을 소리 내어 읽고 색칠해 보세요</span></div>
+        <div class="words"><div class="word-card"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" cx="120" cy="146" rx="100" ry="28"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M74 146 C68 100 88 58 120 58 C152 58 172 100 166 146 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M72 120 h96 v24 h-96 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M158 118 C178 104 196 114 198 132 C178 144 158 138 158 118 Z"/></svg><b>모자</b></div><div class="word-card"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M158 100 C158 62 118 44 82 52 C42 60 22 82 22 100
+                       C22 118 42 140 82 148 C118 156 158 138 158 100 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M158 100 L214 62 L204 100 L214 138 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M78 56 L96 24 L112 58 Z"/>
+    <circle fill="#111" stroke="none" cx="56" cy="90" r="6"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M110 66 C102 84 102 116 110 134"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M132 76 C126 88 126 112 132 124"/></svg><b>물고기</b></div><div class="word-card"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M120 24 L148 90 L220 96 L166 142 L182 212
+                       L120 174 L58 212 L74 142 L20 96 L92 90 Z"/></svg><b>별</b></div><div class="word-card"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" cx="176" cy="56" r="30"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M176 12 v-8 M176 108 v8 M132 56 h-8 M220 56 h8
+                    M145 25 l-6 -6 M207 87 l6 6 M207 25 l6 -6 M145 87 l-6 6"/>
+    <path fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M18 118 q26 -20 52 0 q26 20 52 0 q26 -20 52 0 q26 20 52 0"/>
+    <path fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M18 152 q26 -20 52 0 q26 20 52 0 q26 -20 52 0 q26 20 52 0"/>
+    <path fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M18 186 q26 -20 52 0 q26 20 52 0 q26 -20 52 0 q26 20 52 0"/></svg><b>바다</b></div></div></main>
+  <div class="parent"><b>부모님께</b>오늘 배운 자음은 ㅁ(미음)ㅂ(비읍) 입니다. 아이가 획순을 어기면 <b>지우지 말고</b> 번호를 짚으며 한 번 더 보여 주세요 — 지우면 쓰기 자체를 싫어하게 됩니다. 그림의 낱말을 읽어 주고 <b>첫소리만</b> 따라 말하게 하면 소리와 글자가 붙습니다.</div>
+  <div class="foot">
+    <span>08. ㅁ ㅂ</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div>
+</body></html>

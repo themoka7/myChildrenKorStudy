@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>33. 반지</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<style>
+:root{
+  --ink:#3B2B40;      /* 글자·테두리 — 진한 보라회색 */
+  --rose:#E0508A;     /* 강조·머리말 탭 */
+  --gold:#E8A33D;     /* 굵은 밑줄 */
+  --lilac:#A98BD0;    /* 보조 */
+  --line:#CFC2D8;     /* 연한 선 */
+  --trace:#D6D2DA;    /* 따라쓰기 회색 글자 */
+  --guide:#E6E0EC;    /* 칸 안 십자 보조선 */
+  --serif:'Noto Sans KR',system-ui,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;
+  --round:'Jua','Noto Sans KR',system-ui,sans-serif;
+  --hand:'Gaegu','Noto Sans KR',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff}
+body{font-family:var(--serif);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+@page{size:A4;margin:0}
+.page{
+  width:210mm;height:297mm;padding:11mm 13mm 8mm;
+  display:flex;flex-direction:column;background:#fff;position:relative;
+}
+
+/* ── 머리말 ─────────────────────────────────────── */
+.head{display:flex;align-items:flex-end;gap:7mm;flex:none}
+.tab{
+  font-family:var(--round);font-size:9.2mm;line-height:1;color:#fff;
+  background:var(--rose);padding:3.4mm 6mm 4.2mm;
+  border-radius:0 0 9mm 9mm;margin-top:-11mm;letter-spacing:-.3mm;
+}
+.head .say{font-family:var(--round);font-size:6.4mm;padding-bottom:1.4mm;letter-spacing:-.2mm}
+.newpill{
+  margin-left:auto;font-family:var(--round);font-size:4mm;color:#fff;
+  background:var(--lilac);border-radius:999px;padding:1.6mm 4mm;margin-bottom:1.6mm;
+}
+.newpill + .no{margin-left:3mm}
+.head .no{margin-left:auto;font-family:var(--round);font-size:4.6mm;color:var(--lilac);padding-bottom:2mm}
+.rule{height:2.6mm;background:var(--gold);border-radius:1.3mm;margin:2.5mm 0 0;flex:none}
+.rule.thin{height:1.2mm;background:var(--line)}
+
+/* ── 본문 틀 ─────────────────────────────────────── */
+main{flex:1 1 auto;display:flex;flex-direction:column;gap:4mm;padding-top:4mm;min-height:0}
+.band{display:flex;align-items:center;gap:4mm;flex:none}
+.band h2{
+  font-family:var(--round);font-size:4.8mm;margin:0;color:var(--rose);
+  background:#FCEFF5;border-radius:3mm;padding:1.4mm 3.4mm;white-space:nowrap;
+}
+.band .hint{font-family:var(--hand);font-size:4.6mm;color:var(--lilac)}
+
+/* ── 쓰는 칸 ─────────────────────────────────────── */
+.boxes{display:flex;gap:2.6mm;flex:none}
+.box{
+  border:0.9mm solid var(--ink);border-radius:2.4mm;background:#fff;
+  display:grid;place-items:center;position:relative;overflow:hidden;flex:none;
+}
+/* 십자 보조선 — 글자를 칸 가운데에 앉히는 기준이다 */
+.box::before,.box::after{
+  content:"";position:absolute;background:var(--guide);
+}
+.box::before{left:8%;right:8%;height:0.4mm;top:50%}
+.box::after{top:8%;bottom:8%;width:0.4mm;left:50%}
+.box>span{position:relative;font-weight:500;line-height:1;z-index:1}
+.box.gray>span{color:var(--trace)}
+.box.blank>span{visibility:hidden}
+.box.space::before,.box.space::after{display:none}
+.box.space{border-style:dashed;border-color:var(--line)}
+
+/* ── 색칠 도안 ───────────────────────────────────── */
+.art{display:block;width:100%;height:100%}
+.artbox{flex:1 1 auto;display:grid;place-items:center;min-height:0}
+.artbox svg{max-height:100%;width:auto;max-width:100%}
+
+/* ── 획순 ────────────────────────────────────────── */
+.jamo-row{display:flex;gap:5mm;align-items:center;flex:none}
+.stroke-order{flex:none}
+.stroke-order .guide path{stroke:var(--guide);stroke-width:1.1;stroke-dasharray:3 3;fill:none}
+.stroke-order .st{stroke:var(--ink);stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.stroke-order .num-bg{fill:var(--rose)}
+.stroke-order .num{fill:#fff;font-family:var(--round);font-size:11px;text-anchor:middle;dominant-baseline:central}
+.jamo-meta{font-family:var(--round);font-size:4.4mm;color:var(--lilac);text-align:center;margin-top:1mm}
+
+/* ── 예시 낱말 ───────────────────────────────────── */
+/* 카드에 너비를 못 박아 둔다. height:100% 로 두면 부모 높이가 auto 라
+   그림이 0 으로 찌그러진다 — 실제로 그렇게 인쇄될 뻔했다. */
+.words{display:flex;gap:6mm;justify-content:center;align-items:center;
+       flex:1 1 auto;min-height:0;flex-wrap:wrap}
+.word-card{display:flex;flex-direction:column;align-items:center;gap:1mm;width:40mm;flex:none}
+.word-card svg{width:100%;height:auto}
+.word-card b{font-family:var(--round);font-weight:400;font-size:7mm}
+
+/* ── 조합표 ──────────────────────────────────────── */
+.grid10{display:grid;grid-template-columns:repeat(10,1fr);gap:1.6mm;flex:none}
+.grid10 .box{width:auto;aspect-ratio:1/1;border-width:0.7mm;border-radius:1.8mm}
+.grid10 .box>span{font-size:8.4mm}
+.lead{font-family:var(--round);font-size:5.6mm;color:var(--rose);width:9mm;flex:none;align-self:center}
+.tablerow{display:flex;gap:2.5mm;align-items:center;flex:none}
+.tablerow .grid10{flex:1 1 auto}
+
+/* ── 부모용 ──────────────────────────────────────── */
+.parent{
+  flex:none;margin-top:auto;border:0.7mm dashed var(--lilac);border-radius:3mm;
+  padding:2.6mm 4mm;font-size:3.5mm;line-height:1.5;color:#5C4A63;background:#FBF8FD;
+}
+.parent b{color:var(--rose);font-family:var(--round);font-weight:400;margin-right:2mm}
+.foot{flex:none;display:flex;justify-content:space-between;align-items:center;
+      margin-top:2mm;font-size:3.1mm;color:var(--lilac)}
+.stars{letter-spacing:1mm;font-size:4.6mm;color:var(--gold)}
+</style>
+</head><body>
+<div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">따라쓰고 색칠해요.</div>
+    
+    <div class="no">받침 있는 낱말 · 33/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+    <div class="artbox"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" cx="120" cy="140" rx="54" ry="48"/>
+    <ellipse fill="#fff" stroke="#111" stroke-width="6" cx="120" cy="140" rx="34" ry="30"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M120 24 L86 62 L120 108 L154 62 Z"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M86 62 h68 M120 24 v84 M103 43 L120 62 L137 43"/></svg></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3mm;flex:none">
+      <div class="boxes"><div class="box gray" style="width:42mm;height:42mm"><span style="font-size:28.6mm">반</span></div><div class="box gray" style="width:42mm;height:42mm"><span style="font-size:28.6mm">지</span></div></div>
+      <div class="boxes"><div class="box blank" style="width:42mm;height:42mm"><span style="font-size:28.6mm">반</span></div><div class="box blank" style="width:42mm;height:42mm"><span style="font-size:28.6mm">지</span></div></div>
+    </div></main>
+  <div class="parent"><b>부모님께</b>「반지」 는 ㅂ+ㅏ+ㄴ=반, ㅈ+ㅣ=지 입니다. 먼저 <b>그림을 보고 이름을 말하게</b> 한 다음 글자를 보여 주세요 — 그림 → 소리 → 글자 순서라야 통글자로 외우지 않습니다. 색칠은 덤이 아니라 <b>연필을 오래 쥐는 연습</b>입니다. 먼저 칠하게 두세요.</div>
+  <div class="foot">
+    <span>33. 반지</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div>
+</body></html>

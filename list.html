@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>공주님의 한글 나라 · 부모용 목록</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<style>
+:root{
+  --ink:#3B2B40;      /* 글자·테두리 — 진한 보라회색 */
+  --rose:#E0508A;     /* 강조·머리말 탭 */
+  --gold:#E8A33D;     /* 굵은 밑줄 */
+  --lilac:#A98BD0;    /* 보조 */
+  --line:#CFC2D8;     /* 연한 선 */
+  --trace:#D6D2DA;    /* 따라쓰기 회색 글자 */
+  --guide:#E6E0EC;    /* 칸 안 십자 보조선 */
+  --serif:'Noto Sans KR',system-ui,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;
+  --round:'Jua','Noto Sans KR',system-ui,sans-serif;
+  --hand:'Gaegu','Noto Sans KR',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff}
+body{font-family:var(--serif);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+@page{size:A4;margin:0}
+.page{
+  width:210mm;height:297mm;padding:11mm 13mm 8mm;
+  display:flex;flex-direction:column;background:#fff;position:relative;
+}
+
+/* ── 머리말 ─────────────────────────────────────── */
+.head{display:flex;align-items:flex-end;gap:7mm;flex:none}
+.tab{
+  font-family:var(--round);font-size:9.2mm;line-height:1;color:#fff;
+  background:var(--rose);padding:3.4mm 6mm 4.2mm;
+  border-radius:0 0 9mm 9mm;margin-top:-11mm;letter-spacing:-.3mm;
+}
+.head .say{font-family:var(--round);font-size:6.4mm;padding-bottom:1.4mm;letter-spacing:-.2mm}
+.newpill{
+  margin-left:auto;font-family:var(--round);font-size:4mm;color:#fff;
+  background:var(--lilac);border-radius:999px;padding:1.6mm 4mm;margin-bottom:1.6mm;
+}
+.newpill + .no{margin-left:3mm}
+.head .no{margin-left:auto;font-family:var(--round);font-size:4.6mm;color:var(--lilac);padding-bottom:2mm}
+.rule{height:2.6mm;background:var(--gold);border-radius:1.3mm;margin:2.5mm 0 0;flex:none}
+.rule.thin{height:1.2mm;background:var(--line)}
+
+/* ── 본문 틀 ─────────────────────────────────────── */
+main{flex:1 1 auto;display:flex;flex-direction:column;gap:4mm;padding-top:4mm;min-height:0}
+.band{display:flex;align-items:center;gap:4mm;flex:none}
+.band h2{
+  font-family:var(--round);font-size:4.8mm;margin:0;color:var(--rose);
+  background:#FCEFF5;border-radius:3mm;padding:1.4mm 3.4mm;white-space:nowrap;
+}
+.band .hint{font-family:var(--hand);font-size:4.6mm;color:var(--lilac)}
+
+/* ── 쓰는 칸 ─────────────────────────────────────── */
+.boxes{display:flex;gap:2.6mm;flex:none}
+.box{
+  border:0.9mm solid var(--ink);border-radius:2.4mm;background:#fff;
+  display:grid;place-items:center;position:relative;overflow:hidden;flex:none;
+}
+/* 십자 보조선 — 글자를 칸 가운데에 앉히는 기준이다 */
+.box::before,.box::after{
+  content:"";position:absolute;background:var(--guide);
+}
+.box::before{left:8%;right:8%;height:0.4mm;top:50%}
+.box::after{top:8%;bottom:8%;width:0.4mm;left:50%}
+.box>span{position:relative;font-weight:500;line-height:1;z-index:1}
+.box.gray>span{color:var(--trace)}
+.box.blank>span{visibility:hidden}
+.box.space::before,.box.space::after{display:none}
+.box.space{border-style:dashed;border-color:var(--line)}
+
+/* ── 색칠 도안 ───────────────────────────────────── */
+.art{display:block;width:100%;height:100%}
+.artbox{flex:1 1 auto;display:grid;place-items:center;min-height:0}
+.artbox svg{max-height:100%;width:auto;max-width:100%}
+
+/* ── 획순 ────────────────────────────────────────── */
+.jamo-row{display:flex;gap:5mm;align-items:center;flex:none}
+.stroke-order{flex:none}
+.stroke-order .guide path{stroke:var(--guide);stroke-width:1.1;stroke-dasharray:3 3;fill:none}
+.stroke-order .st{stroke:var(--ink);stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.stroke-order .num-bg{fill:var(--rose)}
+.stroke-order .num{fill:#fff;font-family:var(--round);font-size:11px;text-anchor:middle;dominant-baseline:central}
+.jamo-meta{font-family:var(--round);font-size:4.4mm;color:var(--lilac);text-align:center;margin-top:1mm}
+
+/* ── 예시 낱말 ───────────────────────────────────── */
+/* 카드에 너비를 못 박아 둔다. height:100% 로 두면 부모 높이가 auto 라
+   그림이 0 으로 찌그러진다 — 실제로 그렇게 인쇄될 뻔했다. */
+.words{display:flex;gap:6mm;justify-content:center;align-items:center;
+       flex:1 1 auto;min-height:0;flex-wrap:wrap}
+.word-card{display:flex;flex-direction:column;align-items:center;gap:1mm;width:40mm;flex:none}
+.word-card svg{width:100%;height:auto}
+.word-card b{font-family:var(--round);font-weight:400;font-size:7mm}
+
+/* ── 조합표 ──────────────────────────────────────── */
+.grid10{display:grid;grid-template-columns:repeat(10,1fr);gap:1.6mm;flex:none}
+.grid10 .box{width:auto;aspect-ratio:1/1;border-width:0.7mm;border-radius:1.8mm}
+.grid10 .box>span{font-size:8.4mm}
+.lead{font-family:var(--round);font-size:5.6mm;color:var(--rose);width:9mm;flex:none;align-self:center}
+.tablerow{display:flex;gap:2.5mm;align-items:center;flex:none}
+.tablerow .grid10{flex:1 1 auto}
+
+/* ── 부모용 ──────────────────────────────────────── */
+.parent{
+  flex:none;margin-top:auto;border:0.7mm dashed var(--lilac);border-radius:3mm;
+  padding:2.6mm 4mm;font-size:3.5mm;line-height:1.5;color:#5C4A63;background:#FBF8FD;
+}
+.parent b{color:var(--rose);font-family:var(--round);font-weight:400;margin-right:2mm}
+.foot{flex:none;display:flex;justify-content:space-between;align-items:center;
+      margin-top:2mm;font-size:3.1mm;color:var(--lilac)}
+.stars{letter-spacing:1mm;font-size:4.6mm;color:var(--gold)}
+
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--serif);color:var(--ink);background:#FBF7FD}
+a{color:var(--rose)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+h1{font-family:var(--round);font-weight:400;font-size:30px;margin:0;color:var(--ink)}
+.lede{font-family:var(--hand);font-size:17px;color:var(--lilac);margin:4px 0 18px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.tools button{
+  font-family:var(--round);font-size:15px;padding:8px 15px;border-radius:999px;
+  border:2.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+}
+.tools button.on{background:var(--rose);border-color:#B93C6E;color:#fff}
+.tools .sp{margin-left:auto}
+table{width:100%;border-collapse:collapse;background:#fff;border:2.5px solid var(--ink);border-radius:12px;overflow:hidden}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line);font-size:14px}
+th{background:#F7EFFA;font-family:var(--round);font-weight:400;color:#6B5675}
+tr:last-child td{border-bottom:none}
+td.n{width:44px;color:var(--lilac);font-family:var(--round)}
+td.face{font-family:var(--round);font-size:18px}
+td.zone{color:#7C6A86;font-size:13px}
+.pill{font-size:12px;padding:2px 9px;border-radius:999px;border:1.5px solid}
+.pill.done{background:#FFF0F6;border-color:var(--rose);color:var(--rose)}
+.pill.todo{background:#F5F2F8;border-color:var(--line);color:#9A8AA6}
+tr.hide{display:none}
+.out{
+  width:100%;min-height:120px;margin-top:14px;font-family:ui-monospace,monospace;
+  font-size:13px;padding:11px;border:2px solid var(--line);border-radius:10px;display:none;
+}
+.out.on{display:block}
+.tip{font-size:13px;color:#7C6A86;line-height:1.7;margin-top:18px;
+     border-left:4px solid var(--lilac);padding-left:12px}
+</style>
+</head><body><div class="wrap">
+  <h1>부모용 목록</h1>
+  <p class="lede">공주님의 한글 나라 · 전체 44장 ·
+     <a href="index.html">아이 화면(지도)으로</a></p>
+
+  <div class="tools">
+    <button data-f="all" class="on">전체</button>
+    <button data-f="done">한 것</button>
+    <button data-f="todo">안 한 것</button>
+    <span class="sp"></span>
+    <button id="copy">진도 복사하기</button>
+  </div>
+
+  <table>
+    <thead><tr><th></th><th>내용</th><th>마당</th><th>상태</th><th>인쇄</th></tr></thead>
+    <tbody><tr data-n="1"><td class="n">1</td><td class="face">ㅏ ㅑ</td><td class="zone">모음 나라 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit01.html">학습지</a></td></tr><tr data-n="2"><td class="n">2</td><td class="face">ㅓ ㅕ</td><td class="zone">모음 나라 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit02.html">학습지</a></td></tr><tr data-n="3"><td class="n">3</td><td class="face">ㅗ ㅛ</td><td class="zone">모음 나라 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit03.html">학습지</a></td></tr><tr data-n="4"><td class="n">4</td><td class="face">ㅜ ㅠ</td><td class="zone">모음 나라 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit04.html">학습지</a></td></tr><tr data-n="5"><td class="n">5</td><td class="face">ㅡ ㅣ</td><td class="zone">모음 나라 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit05.html">학습지</a></td></tr><tr data-n="6"><td class="n">6</td><td class="face">ㄱ ㄴ</td><td class="zone">자음 성 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit06.html">학습지</a></td></tr><tr data-n="7"><td class="n">7</td><td class="face">ㄷ ㄹ</td><td class="zone">자음 성 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit07.html">학습지</a></td></tr><tr data-n="8"><td class="n">8</td><td class="face">ㅁ ㅂ</td><td class="zone">자음 성 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit08.html">학습지</a></td></tr><tr data-n="9"><td class="n">9</td><td class="face">ㅅ ㅇ</td><td class="zone">자음 성 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit09.html">학습지</a></td></tr><tr data-n="10"><td class="n">10</td><td class="face">ㅈ ㅊ</td><td class="zone">자음 성 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit10.html">학습지</a></td></tr><tr data-n="11"><td class="n">11</td><td class="face">ㅋ ㅌ</td><td class="zone">자음 성 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit11.html">학습지</a></td></tr><tr data-n="12"><td class="n">12</td><td class="face">ㅍ ㅎ</td><td class="zone">자음 성 · 쓰는 순서</td><td><span class="pill todo">아직</span></td><td><a href="print/unit12.html">학습지</a></td></tr><tr data-n="13"><td class="n">13</td><td class="face">ㄱ ㄴ</td><td class="zone">글자 만들기 · 글자 만들기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit13.html">학습지</a></td></tr><tr data-n="14"><td class="n">14</td><td class="face">ㄷ ㄹ</td><td class="zone">글자 만들기 · 글자 만들기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit14.html">학습지</a></td></tr><tr data-n="15"><td class="n">15</td><td class="face">ㅁ ㅂ</td><td class="zone">글자 만들기 · 글자 만들기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit15.html">학습지</a></td></tr><tr data-n="16"><td class="n">16</td><td class="face">ㅅ ㅇ</td><td class="zone">글자 만들기 · 글자 만들기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit16.html">학습지</a></td></tr><tr data-n="17"><td class="n">17</td><td class="face">ㅈ ㅊ</td><td class="zone">글자 만들기 · 글자 만들기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit17.html">학습지</a></td></tr><tr data-n="18"><td class="n">18</td><td class="face">ㅋ ㅌ</td><td class="zone">글자 만들기 · 글자 만들기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit18.html">학습지</a></td></tr><tr data-n="19"><td class="n">19</td><td class="face">ㅍ ㅎ</td><td class="zone">글자 만들기 · 글자 만들기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit19.html">학습지</a></td></tr><tr data-n="20"><td class="n">20</td><td class="face">나비</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit20.html">학습지</a></td></tr><tr data-n="21"><td class="n">21</td><td class="face">모자</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit21.html">학습지</a></td></tr><tr data-n="22"><td class="n">22</td><td class="face">치마</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit22.html">학습지</a></td></tr><tr data-n="23"><td class="n">23</td><td class="face">구두</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit23.html">학습지</a></td></tr><tr data-n="24"><td class="n">24</td><td class="face">마차</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit24.html">학습지</a></td></tr><tr data-n="25"><td class="n">25</td><td class="face">바다</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit25.html">학습지</a></td></tr><tr data-n="26"><td class="n">26</td><td class="face">포도</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit26.html">학습지</a></td></tr><tr data-n="27"><td class="n">27</td><td class="face">우유</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit27.html">학습지</a></td></tr><tr data-n="28"><td class="n">28</td><td class="face">기차</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit28.html">학습지</a></td></tr><tr data-n="29"><td class="n">29</td><td class="face">드레스</td><td class="zone">받침 없는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit29.html">학습지</a></td></tr><tr data-n="30"><td class="n">30</td><td class="face">공주</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit30.html">학습지</a></td></tr><tr data-n="31"><td class="n">31</td><td class="face">리본</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit31.html">학습지</a></td></tr><tr data-n="32"><td class="n">32</td><td class="face">왕관</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit32.html">학습지</a></td></tr><tr data-n="33"><td class="n">33</td><td class="face">반지</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit33.html">학습지</a></td></tr><tr data-n="34"><td class="n">34</td><td class="face">요정</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit34.html">학습지</a></td></tr><tr data-n="35"><td class="n">35</td><td class="face">거울</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit35.html">학습지</a></td></tr><tr data-n="36"><td class="n">36</td><td class="face">구름</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit36.html">학습지</a></td></tr><tr data-n="37"><td class="n">37</td><td class="face">사탕</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit37.html">학습지</a></td></tr><tr data-n="38"><td class="n">38</td><td class="face">유니콘</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit38.html">학습지</a></td></tr><tr data-n="39"><td class="n">39</td><td class="face">꽃</td><td class="zone">받침 있는 낱말 · 낱말 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit39.html">학습지</a></td></tr><tr data-n="40"><td class="n">40</td><td class="face">나는 공주예요</td><td class="zone">문장 쓰기 · 문장 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit40.html">학습지</a></td></tr><tr data-n="41"><td class="n">41</td><td class="face">공주가 왕관을 써요</td><td class="zone">문장 쓰기 · 문장 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit41.html">학습지</a></td></tr><tr data-n="42"><td class="n">42</td><td class="face">유니콘이 달려요</td><td class="zone">문장 쓰기 · 문장 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit42.html">학습지</a></td></tr><tr data-n="43"><td class="n">43</td><td class="face">꽃이 피어요</td><td class="zone">문장 쓰기 · 문장 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit43.html">학습지</a></td></tr><tr data-n="44"><td class="n">44</td><td class="face">나는 한글을 읽어요</td><td class="zone">문장 쓰기 · 문장 쓰기</td><td><span class="pill todo">아직</span></td><td><a href="print/unit44.html">학습지</a></td></tr></tbody>
+  </table>
+
+  <textarea class="out" id="out" readonly></textarea>
+
+  <p class="tip">
+    도장은 <b>이 브라우저에만</b> 저장됩니다. 다른 기기로 옮기려면
+    「진도 복사하기」로 번호를 뽑아 <code>units.json</code> 의 해당 유닛을
+    <code>"status": "done"</code> 으로 고치고 <code>python3 tools/build.py</code> 를 돌리세요.
+    그러면 어느 기기에서 열어도 도장이 찍혀 있습니다.
+  </p>
+</div>
+
+<script>
+const SEED = [];
+const KEY = "kor-study-stamps-v1";
+
+let done;
+try{
+  const o = JSON.parse(localStorage.getItem(KEY) || "null");
+  if(!o) done = new Set(SEED);
+  else{
+    done = new Set(o.done || []);
+    const seen = new Set(o.seed || []);
+    SEED.forEach(n => { if(!seen.has(n)) done.add(n); });
+  }
+}catch(e){ done = new Set(SEED); }
+
+document.querySelectorAll("tbody tr").forEach(tr=>{
+  const on = done.has(+tr.dataset.n);
+  const p = tr.querySelector(".pill");
+  p.className = "pill " + (on ? "done" : "todo");
+  p.textContent = on ? "했어요" : "아직";
+  tr.dataset.state = on ? "done" : "todo";
+});
+
+document.querySelectorAll("[data-f]").forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll("[data-f]").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    const f = b.dataset.f;
+    document.querySelectorAll("tbody tr").forEach(tr=>{
+      tr.classList.toggle("hide", f !== "all" && tr.dataset.state !== f);
+    });
+  };
+});
+
+document.getElementById("copy").onclick = ()=>{
+  const ns = [...done].sort((a,b)=>a-b);
+  const out = document.getElementById("out");
+  out.value = ns.length
+    ? `units.json 에서 아래 번호의 유닛을 "status": "done" 으로 고치세요.\n\n`
+      + ns.join(", ")
+    : "아직 찍은 도장이 없습니다.";
+  out.classList.add("on");
+  out.select();
+};
+</script>
+</body></html>

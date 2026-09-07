@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>글자 만들기 · 7장</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<style>
+:root{
+  --ink:#3B2B40;      /* 글자·테두리 — 진한 보라회색 */
+  --rose:#E0508A;     /* 강조·머리말 탭 */
+  --gold:#E8A33D;     /* 굵은 밑줄 */
+  --lilac:#A98BD0;    /* 보조 */
+  --line:#CFC2D8;     /* 연한 선 */
+  --trace:#D6D2DA;    /* 따라쓰기 회색 글자 */
+  --guide:#E6E0EC;    /* 칸 안 십자 보조선 */
+  --serif:'Noto Sans KR',system-ui,'Malgun Gothic','Apple SD Gothic Neo',sans-serif;
+  --round:'Jua','Noto Sans KR',system-ui,sans-serif;
+  --hand:'Gaegu','Noto Sans KR',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff}
+body{font-family:var(--serif);color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+@page{size:A4;margin:0}
+.page{
+  width:210mm;height:297mm;padding:11mm 13mm 8mm;
+  display:flex;flex-direction:column;background:#fff;position:relative;
+}
+
+/* ── 머리말 ─────────────────────────────────────── */
+.head{display:flex;align-items:flex-end;gap:7mm;flex:none}
+.tab{
+  font-family:var(--round);font-size:9.2mm;line-height:1;color:#fff;
+  background:var(--rose);padding:3.4mm 6mm 4.2mm;
+  border-radius:0 0 9mm 9mm;margin-top:-11mm;letter-spacing:-.3mm;
+}
+.head .say{font-family:var(--round);font-size:6.4mm;padding-bottom:1.4mm;letter-spacing:-.2mm}
+.newpill{
+  margin-left:auto;font-family:var(--round);font-size:4mm;color:#fff;
+  background:var(--lilac);border-radius:999px;padding:1.6mm 4mm;margin-bottom:1.6mm;
+}
+.newpill + .no{margin-left:3mm}
+.head .no{margin-left:auto;font-family:var(--round);font-size:4.6mm;color:var(--lilac);padding-bottom:2mm}
+.rule{height:2.6mm;background:var(--gold);border-radius:1.3mm;margin:2.5mm 0 0;flex:none}
+.rule.thin{height:1.2mm;background:var(--line)}
+
+/* ── 본문 틀 ─────────────────────────────────────── */
+main{flex:1 1 auto;display:flex;flex-direction:column;gap:4mm;padding-top:4mm;min-height:0}
+.band{display:flex;align-items:center;gap:4mm;flex:none}
+.band h2{
+  font-family:var(--round);font-size:4.8mm;margin:0;color:var(--rose);
+  background:#FCEFF5;border-radius:3mm;padding:1.4mm 3.4mm;white-space:nowrap;
+}
+.band .hint{font-family:var(--hand);font-size:4.6mm;color:var(--lilac)}
+
+/* ── 쓰는 칸 ─────────────────────────────────────── */
+.boxes{display:flex;gap:2.6mm;flex:none}
+.box{
+  border:0.9mm solid var(--ink);border-radius:2.4mm;background:#fff;
+  display:grid;place-items:center;position:relative;overflow:hidden;flex:none;
+}
+/* 십자 보조선 — 글자를 칸 가운데에 앉히는 기준이다 */
+.box::before,.box::after{
+  content:"";position:absolute;background:var(--guide);
+}
+.box::before{left:8%;right:8%;height:0.4mm;top:50%}
+.box::after{top:8%;bottom:8%;width:0.4mm;left:50%}
+.box>span{position:relative;font-weight:500;line-height:1;z-index:1}
+.box.gray>span{color:var(--trace)}
+.box.blank>span{visibility:hidden}
+.box.space::before,.box.space::after{display:none}
+.box.space{border-style:dashed;border-color:var(--line)}
+
+/* ── 색칠 도안 ───────────────────────────────────── */
+.art{display:block;width:100%;height:100%}
+.artbox{flex:1 1 auto;display:grid;place-items:center;min-height:0}
+.artbox svg{max-height:100%;width:auto;max-width:100%}
+
+/* ── 획순 ────────────────────────────────────────── */
+.jamo-row{display:flex;gap:5mm;align-items:center;flex:none}
+.stroke-order{flex:none}
+.stroke-order .guide path{stroke:var(--guide);stroke-width:1.1;stroke-dasharray:3 3;fill:none}
+.stroke-order .st{stroke:var(--ink);stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.stroke-order .num-bg{fill:var(--rose)}
+.stroke-order .num{fill:#fff;font-family:var(--round);font-size:11px;text-anchor:middle;dominant-baseline:central}
+.jamo-meta{font-family:var(--round);font-size:4.4mm;color:var(--lilac);text-align:center;margin-top:1mm}
+
+/* ── 예시 낱말 ───────────────────────────────────── */
+/* 카드에 너비를 못 박아 둔다. height:100% 로 두면 부모 높이가 auto 라
+   그림이 0 으로 찌그러진다 — 실제로 그렇게 인쇄될 뻔했다. */
+.words{display:flex;gap:6mm;justify-content:center;align-items:center;
+       flex:1 1 auto;min-height:0;flex-wrap:wrap}
+.word-card{display:flex;flex-direction:column;align-items:center;gap:1mm;width:40mm;flex:none}
+.word-card svg{width:100%;height:auto}
+.word-card b{font-family:var(--round);font-weight:400;font-size:7mm}
+
+/* ── 조합표 ──────────────────────────────────────── */
+.grid10{display:grid;grid-template-columns:repeat(10,1fr);gap:1.6mm;flex:none}
+.grid10 .box{width:auto;aspect-ratio:1/1;border-width:0.7mm;border-radius:1.8mm}
+.grid10 .box>span{font-size:8.4mm}
+.lead{font-family:var(--round);font-size:5.6mm;color:var(--rose);width:9mm;flex:none;align-self:center}
+.tablerow{display:flex;gap:2.5mm;align-items:center;flex:none}
+.tablerow .grid10{flex:1 1 auto}
+
+/* ── 부모용 ──────────────────────────────────────── */
+.parent{
+  flex:none;margin-top:auto;border:0.7mm dashed var(--lilac);border-radius:3mm;
+  padding:2.6mm 4mm;font-size:3.5mm;line-height:1.5;color:#5C4A63;background:#FBF8FD;
+}
+.parent b{color:var(--rose);font-family:var(--round);font-weight:400;margin-right:2mm}
+.foot{flex:none;display:flex;justify-content:space-between;align-items:center;
+      margin-top:2mm;font-size:3.1mm;color:var(--lilac)}
+.stars{letter-spacing:1mm;font-size:4.6mm;color:var(--gold)}
+</style>
+</head><body>
+<div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">소리 내어 읽고 따라 써요.</div>
+    
+    <div class="no">글자 만들기 · 13/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+    <div class="band"><h2>글자를 만들어요</h2>
+      <span class="hint">ㄱ 와 ㅏ 가 만나면 「가」</span></div>
+    
+        <div class="tablerow"><div class="lead">ㄱ</div>
+          <div class="grid10"><div class="box gray"><span>가</span></div><div class="box gray"><span>갸</span></div><div class="box gray"><span>거</span></div><div class="box gray"><span>겨</span></div><div class="box gray"><span>고</span></div><div class="box gray"><span>교</span></div><div class="box gray"><span>구</span></div><div class="box gray"><span>규</span></div><div class="box gray"><span>그</span></div><div class="box gray"><span>기</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+        <div class="tablerow"><div class="lead">ㄴ</div>
+          <div class="grid10"><div class="box gray"><span>나</span></div><div class="box gray"><span>냐</span></div><div class="box gray"><span>너</span></div><div class="box gray"><span>녀</span></div><div class="box gray"><span>노</span></div><div class="box gray"><span>뇨</span></div><div class="box gray"><span>누</span></div><div class="box gray"><span>뉴</span></div><div class="box gray"><span>느</span></div><div class="box gray"><span>니</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+    <div class="band"><h2>색칠해요</h2>
+      <span class="hint">읽을 수 있는 글자에 동그라미를 치고 색칠하세요</span></div>
+    <div class="artbox"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M84 46 L92 12 L106 34 L120 6 L134 34 L148 12 L156 46 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M84 46 h72 v12 h-72 Z"/>
+    <circle fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" cx="120" cy="88" r="40"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M82 82 C66 130 68 164 82 188 L102 134 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M158 82 C174 130 172 164 158 188 L138 134 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M100 124 L140 124 L190 197 L50 197 Z"/>
+    <circle fill="#111" stroke="none" cx="107" cy="84" r="5"/>
+    <circle fill="#111" stroke="none" cx="133" cy="84" r="5"/>
+    <path fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M110 102 q10 9 20 0"/></svg></div></main>
+  <div class="parent"><b>부모님께</b>오늘은 ㄱ·ㄴ 에 모음 열 개를 붙였습니다. 「가」 를 짚고 <b>“ㄱ 에 ㅏ 를 붙이면?”</b> 하고 물어보세요. 전부 못 읽어도 됩니다 — <b>읽은 글자에 동그라미</b>만 쳐 두고 다음에 또 하면 늘어납니다. 이 마당이 한글의 고비라서, 못 읽는 칸이 많아도 다음 마당으로 넘기지 마세요.</div>
+  <div class="foot">
+    <span>13. ㄱ·ㄴ 글자 만들기</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div><div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">소리 내어 읽고 따라 써요.</div>
+    
+    <div class="no">글자 만들기 · 14/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+    <div class="band"><h2>글자를 만들어요</h2>
+      <span class="hint">ㄷ 와 ㅏ 가 만나면 「다」</span></div>
+    
+        <div class="tablerow"><div class="lead">ㄷ</div>
+          <div class="grid10"><div class="box gray"><span>다</span></div><div class="box gray"><span>댜</span></div><div class="box gray"><span>더</span></div><div class="box gray"><span>뎌</span></div><div class="box gray"><span>도</span></div><div class="box gray"><span>됴</span></div><div class="box gray"><span>두</span></div><div class="box gray"><span>듀</span></div><div class="box gray"><span>드</span></div><div class="box gray"><span>디</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+        <div class="tablerow"><div class="lead">ㄹ</div>
+          <div class="grid10"><div class="box gray"><span>라</span></div><div class="box gray"><span>랴</span></div><div class="box gray"><span>러</span></div><div class="box gray"><span>려</span></div><div class="box gray"><span>로</span></div><div class="box gray"><span>료</span></div><div class="box gray"><span>루</span></div><div class="box gray"><span>류</span></div><div class="box gray"><span>르</span></div><div class="box gray"><span>리</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+    <div class="band"><h2>색칠해요</h2>
+      <span class="hint">읽을 수 있는 글자에 동그라미를 치고 색칠하세요</span></div>
+    <div class="artbox"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M120 34 C176 34 206 76 206 116 C206 148 172 164 120 164
+                       C68 164 34 148 34 116 C34 76 64 34 120 34 Z"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M120 34 C104 74 104 124 120 164 M120 34 C136 74 136 124 120 164
+                    M64 50 C58 90 62 130 78 158 M176 50 C182 90 178 130 162 158"/>
+    <rect fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" x="96" y="76" width="48" height="52" rx="22"/>
+    <circle fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" cx="66" cy="170" r="26"/>
+    <circle fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" cx="174" cy="170" r="26"/>
+    <circle fill="#111" stroke="none" cx="66" cy="170" r="6"/>
+    <circle fill="#111" stroke="none" cx="174" cy="170" r="6"/></svg></div></main>
+  <div class="parent"><b>부모님께</b>오늘은 ㄷ·ㄹ 에 모음 열 개를 붙였습니다. 「다」 를 짚고 <b>“ㄷ 에 ㅏ 를 붙이면?”</b> 하고 물어보세요. 전부 못 읽어도 됩니다 — <b>읽은 글자에 동그라미</b>만 쳐 두고 다음에 또 하면 늘어납니다. 이 마당이 한글의 고비라서, 못 읽는 칸이 많아도 다음 마당으로 넘기지 마세요.</div>
+  <div class="foot">
+    <span>14. ㄷ·ㄹ 글자 만들기</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div><div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">소리 내어 읽고 따라 써요.</div>
+    
+    <div class="no">글자 만들기 · 15/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+    <div class="band"><h2>글자를 만들어요</h2>
+      <span class="hint">ㅁ 와 ㅏ 가 만나면 「마」</span></div>
+    
+        <div class="tablerow"><div class="lead">ㅁ</div>
+          <div class="grid10"><div class="box gray"><span>마</span></div><div class="box gray"><span>먀</span></div><div class="box gray"><span>머</span></div><div class="box gray"><span>며</span></div><div class="box gray"><span>모</span></div><div class="box gray"><span>묘</span></div><div class="box gray"><span>무</span></div><div class="box gray"><span>뮤</span></div><div class="box gray"><span>므</span></div><div class="box gray"><span>미</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+        <div class="tablerow"><div class="lead">ㅂ</div>
+          <div class="grid10"><div class="box gray"><span>바</span></div><div class="box gray"><span>뱌</span></div><div class="box gray"><span>버</span></div><div class="box gray"><span>벼</span></div><div class="box gray"><span>보</span></div><div class="box gray"><span>뵤</span></div><div class="box gray"><span>부</span></div><div class="box gray"><span>뷰</span></div><div class="box gray"><span>브</span></div><div class="box gray"><span>비</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+    <div class="band"><h2>색칠해요</h2>
+      <span class="hint">읽을 수 있는 글자에 동그라미를 치고 색칠하세요</span></div>
+    <div class="artbox"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M40 190 v-88 h34 v88 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M166 190 v-88 h34 v88 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M74 190 v-64 h92 v64 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M40 102 L57 60 L74 102 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M166 102 L183 60 L200 102 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M74 126 L120 76 L166 126 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M104 190 v-38 a16 16 0 0 1 32 0 v38 Z"/>
+    <path fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M120 76 v-28 M57 60 v-22 M183 60 v-22"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M120 48 L152 58 L120 68 Z"/>
+    <rect fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" x="49" y="122" width="16" height="20" rx="7"/>
+    <rect fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" x="175" y="122" width="16" height="20" rx="7"/></svg></div></main>
+  <div class="parent"><b>부모님께</b>오늘은 ㅁ·ㅂ 에 모음 열 개를 붙였습니다. 「마」 를 짚고 <b>“ㅁ 에 ㅏ 를 붙이면?”</b> 하고 물어보세요. 전부 못 읽어도 됩니다 — <b>읽은 글자에 동그라미</b>만 쳐 두고 다음에 또 하면 늘어납니다. 이 마당이 한글의 고비라서, 못 읽는 칸이 많아도 다음 마당으로 넘기지 마세요.</div>
+  <div class="foot">
+    <span>15. ㅁ·ㅂ 글자 만들기</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div><div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">소리 내어 읽고 따라 써요.</div>
+    
+    <div class="no">글자 만들기 · 16/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+    <div class="band"><h2>글자를 만들어요</h2>
+      <span class="hint">ㅅ 와 ㅏ 가 만나면 「사」</span></div>
+    
+        <div class="tablerow"><div class="lead">ㅅ</div>
+          <div class="grid10"><div class="box gray"><span>사</span></div><div class="box gray"><span>샤</span></div><div class="box gray"><span>서</span></div><div class="box gray"><span>셔</span></div><div class="box gray"><span>소</span></div><div class="box gray"><span>쇼</span></div><div class="box gray"><span>수</span></div><div class="box gray"><span>슈</span></div><div class="box gray"><span>스</span></div><div class="box gray"><span>시</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+        <div class="tablerow"><div class="lead">ㅇ</div>
+          <div class="grid10"><div class="box gray"><span>아</span></div><div class="box gray"><span>야</span></div><div class="box gray"><span>어</span></div><div class="box gray"><span>여</span></div><div class="box gray"><span>오</span></div><div class="box gray"><span>요</span></div><div class="box gray"><span>우</span></div><div class="box gray"><span>유</span></div><div class="box gray"><span>으</span></div><div class="box gray"><span>이</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+    <div class="band"><h2>색칠해요</h2>
+      <span class="hint">읽을 수 있는 글자에 동그라미를 치고 색칠하세요</span></div>
+    <div class="artbox"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M118 40 C158 40 186 66 190 100 C194 132 178 158 150 168
+                       L150 192 L96 192 L96 152 C74 140 66 106 82 74 C92 54 104 40 118 40 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M126 44 L138 6 L154 42 Z"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M130 32 l18 5 M134 20 l16 5"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M96 56 L74 26 L106 40 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M84 74 C56 66 34 82 30 106 C50 100 62 106 68 116
+                       C46 118 30 138 32 160 C54 148 68 152 76 160
+                       C66 128 68 96 84 74 Z"/>
+    <circle fill="#111" stroke="none" cx="152" cy="94" r="6"/>
+    <path fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M186 120 q-10 8 -20 4"/>
+    <circle fill="#111" stroke="none" cx="182" cy="106" r="4"/></svg></div></main>
+  <div class="parent"><b>부모님께</b>오늘은 ㅅ·ㅇ 에 모음 열 개를 붙였습니다. 「사」 를 짚고 <b>“ㅅ 에 ㅏ 를 붙이면?”</b> 하고 물어보세요. 전부 못 읽어도 됩니다 — <b>읽은 글자에 동그라미</b>만 쳐 두고 다음에 또 하면 늘어납니다. 이 마당이 한글의 고비라서, 못 읽는 칸이 많아도 다음 마당으로 넘기지 마세요.</div>
+  <div class="foot">
+    <span>16. ㅅ·ㅇ 글자 만들기</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div><div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">소리 내어 읽고 따라 써요.</div>
+    
+    <div class="no">글자 만들기 · 17/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+    <div class="band"><h2>글자를 만들어요</h2>
+      <span class="hint">ㅈ 와 ㅏ 가 만나면 「자」</span></div>
+    
+        <div class="tablerow"><div class="lead">ㅈ</div>
+          <div class="grid10"><div class="box gray"><span>자</span></div><div class="box gray"><span>쟈</span></div><div class="box gray"><span>저</span></div><div class="box gray"><span>져</span></div><div class="box gray"><span>조</span></div><div class="box gray"><span>죠</span></div><div class="box gray"><span>주</span></div><div class="box gray"><span>쥬</span></div><div class="box gray"><span>즈</span></div><div class="box gray"><span>지</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+        <div class="tablerow"><div class="lead">ㅊ</div>
+          <div class="grid10"><div class="box gray"><span>차</span></div><div class="box gray"><span>챠</span></div><div class="box gray"><span>처</span></div><div class="box gray"><span>쳐</span></div><div class="box gray"><span>초</span></div><div class="box gray"><span>쵸</span></div><div class="box gray"><span>추</span></div><div class="box gray"><span>츄</span></div><div class="box gray"><span>츠</span></div><div class="box gray"><span>치</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+    <div class="band"><h2>색칠해요</h2>
+      <span class="hint">읽을 수 있는 글자에 동그라미를 치고 색칠하세요</span></div>
+    <div class="artbox"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M96 96 C60 66 34 74 30 100 C26 126 56 140 96 128 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M144 96 C180 66 206 74 210 100 C214 126 184 140 144 128 Z"/>
+    <circle fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" cx="120" cy="80" r="30"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M106 108 L134 108 L156 186 L84 186 Z"/>
+    <circle fill="#111" stroke="none" cx="110" cy="76" r="4.5"/>
+    <circle fill="#111" stroke="none" cx="130" cy="76" r="4.5"/>
+    <path fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M112 92 q8 7 16 0"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M186 150 l0 -18 M177 141 l18 0 M40 158 l0 -14 M33 151 l14 0"/></svg></div></main>
+  <div class="parent"><b>부모님께</b>오늘은 ㅈ·ㅊ 에 모음 열 개를 붙였습니다. 「자」 를 짚고 <b>“ㅈ 에 ㅏ 를 붙이면?”</b> 하고 물어보세요. 전부 못 읽어도 됩니다 — <b>읽은 글자에 동그라미</b>만 쳐 두고 다음에 또 하면 늘어납니다. 이 마당이 한글의 고비라서, 못 읽는 칸이 많아도 다음 마당으로 넘기지 마세요.</div>
+  <div class="foot">
+    <span>17. ㅈ·ㅊ 글자 만들기</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div><div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">소리 내어 읽고 따라 써요.</div>
+    
+    <div class="no">글자 만들기 · 18/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+    <div class="band"><h2>글자를 만들어요</h2>
+      <span class="hint">ㅋ 와 ㅏ 가 만나면 「카」</span></div>
+    
+        <div class="tablerow"><div class="lead">ㅋ</div>
+          <div class="grid10"><div class="box gray"><span>카</span></div><div class="box gray"><span>캬</span></div><div class="box gray"><span>커</span></div><div class="box gray"><span>켜</span></div><div class="box gray"><span>코</span></div><div class="box gray"><span>쿄</span></div><div class="box gray"><span>쿠</span></div><div class="box gray"><span>큐</span></div><div class="box gray"><span>크</span></div><div class="box gray"><span>키</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+        <div class="tablerow"><div class="lead">ㅌ</div>
+          <div class="grid10"><div class="box gray"><span>타</span></div><div class="box gray"><span>탸</span></div><div class="box gray"><span>터</span></div><div class="box gray"><span>텨</span></div><div class="box gray"><span>토</span></div><div class="box gray"><span>툐</span></div><div class="box gray"><span>투</span></div><div class="box gray"><span>튜</span></div><div class="box gray"><span>트</span></div><div class="box gray"><span>티</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+    <div class="band"><h2>색칠해요</h2>
+      <span class="hint">읽을 수 있는 글자에 동그라미를 치고 색칠하세요</span></div>
+    <div class="artbox"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M46 190 v-52 h148 v52 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M62 138 v-40 h116 v40 Z"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M62 116 q16 12 29 0 q13 -12 29 0 q16 12 29 0 q13 -12 29 0"/>
+    <path fill="none" stroke="#111" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M46 166 q18 12 33 0 q15 -12 33 0 q18 12 33 0 q15 -12 33 0"/>
+    <rect fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" x="93" y="60" width="12" height="38" rx="5"/>
+    <rect fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" x="135" y="60" width="12" height="38" rx="5"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M99 58 C90 48 99 36 99 30 C99 38 108 46 99 58 Z"/>
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M141 58 C132 48 141 36 141 30 C141 38 150 46 141 58 Z"/></svg></div></main>
+  <div class="parent"><b>부모님께</b>오늘은 ㅋ·ㅌ 에 모음 열 개를 붙였습니다. 「카」 를 짚고 <b>“ㅋ 에 ㅏ 를 붙이면?”</b> 하고 물어보세요. 전부 못 읽어도 됩니다 — <b>읽은 글자에 동그라미</b>만 쳐 두고 다음에 또 하면 늘어납니다. 이 마당이 한글의 고비라서, 못 읽는 칸이 많아도 다음 마당으로 넘기지 마세요.</div>
+  <div class="foot">
+    <span>18. ㅋ·ㅌ 글자 만들기</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div><div class="page">
+  <header class="head">
+    <div class="tab">한글쓰기</div>
+    <div class="say">소리 내어 읽고 따라 써요.</div>
+    
+    <div class="no">글자 만들기 · 19/44</div>
+  </header>
+  <div class="rule"></div>
+  <main>
+    <div class="band"><h2>글자를 만들어요</h2>
+      <span class="hint">ㅍ 와 ㅏ 가 만나면 「파」</span></div>
+    
+        <div class="tablerow"><div class="lead">ㅍ</div>
+          <div class="grid10"><div class="box gray"><span>파</span></div><div class="box gray"><span>퍄</span></div><div class="box gray"><span>퍼</span></div><div class="box gray"><span>펴</span></div><div class="box gray"><span>포</span></div><div class="box gray"><span>표</span></div><div class="box gray"><span>푸</span></div><div class="box gray"><span>퓨</span></div><div class="box gray"><span>프</span></div><div class="box gray"><span>피</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+        <div class="tablerow"><div class="lead">ㅎ</div>
+          <div class="grid10"><div class="box gray"><span>하</span></div><div class="box gray"><span>햐</span></div><div class="box gray"><span>허</span></div><div class="box gray"><span>혀</span></div><div class="box gray"><span>호</span></div><div class="box gray"><span>효</span></div><div class="box gray"><span>후</span></div><div class="box gray"><span>휴</span></div><div class="box gray"><span>흐</span></div><div class="box gray"><span>히</span></div></div></div>
+        <div class="tablerow"><div class="lead"></div>
+          <div class="grid10"><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div><div class="box blank"><span>가</span></div></div></div>
+    <div class="band"><h2>색칠해요</h2>
+      <span class="hint">읽을 수 있는 글자에 동그라미를 치고 색칠하세요</span></div>
+    <div class="artbox"><svg class="art" viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fff" stroke="#111" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="M62 158 C34 158 20 138 26 118 C32 100 52 94 66 100
+                       C68 68 100 50 128 62 C146 46 178 52 186 78
+                       C212 80 222 106 210 128 C202 146 184 158 162 158 Z"/></svg></div></main>
+  <div class="parent"><b>부모님께</b>오늘은 ㅍ·ㅎ 에 모음 열 개를 붙였습니다. 「파」 를 짚고 <b>“ㅍ 에 ㅏ 를 붙이면?”</b> 하고 물어보세요. 전부 못 읽어도 됩니다 — <b>읽은 글자에 동그라미</b>만 쳐 두고 다음에 또 하면 늘어납니다. 이 마당이 한글의 고비라서, 못 읽는 칸이 많아도 다음 마당으로 넘기지 마세요.</div>
+  <div class="foot">
+    <span>19. ㅍ·ㅎ 글자 만들기</span>
+    <span class="stars">☆ ☆ ☆</span>
+  </div>
+</div>
+</body></html>
