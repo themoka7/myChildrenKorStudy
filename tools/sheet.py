@@ -259,9 +259,13 @@ def sheet_jamo(u, group, total):
                   "모음은 <b>소리를 먼저</b> 익히게 하세요 — 모양보다 소리가 먼저입니다. "
                   "칸 안의 십자선은 글자를 가운데에 앉히는 기준선입니다.")
     else:
+        words = [w for c in chars for w in jamo.CONSONANTS[c]["words"]]
+        # 낱말이 둘뿐인 장(ㅈㅊ·ㅋㅌ·ㅍㅎ)은 40mm 카드로는 허전하다.
+        # 개수에 맞춰 키운다 — 남는 자리를 그림이 쓰는 게 아이에게 낫다.
+        cw = {1: 70, 2: 58, 3: 48}.get(len(words), 40)
         cards = "".join(
-            f'<div class="word-card">{art.svg(w)}<b>{esc(w)}</b></div>'
-            for c in chars for w in jamo.CONSONANTS[c]["words"])
+            f'<div class="word-card" style="width:{cw}mm">'
+            f'{art.svg(w)}<b>{esc(w)}</b></div>' for w in words)
         first = "".join(f"{c}({jamo.CONSONANTS[c]['name']})" for c in chars)
         tail = f"""
         <div class="band"><h2>이 소리로 시작해요</h2>
